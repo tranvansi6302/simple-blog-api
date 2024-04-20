@@ -6,7 +6,6 @@ import com.simpleblogapi.simpleblogapi.models.Role;
 import com.simpleblogapi.simpleblogapi.models.User;
 import com.simpleblogapi.simpleblogapi.repositories.RoleRepository;
 import com.simpleblogapi.simpleblogapi.repositories.UserRepository;
-import com.simpleblogapi.simpleblogapi.responses.CategoryResponse;
 import com.simpleblogapi.simpleblogapi.responses.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -20,9 +20,6 @@ public class UserResponse {
     @JsonProperty("email")
     private String email;
 
-    @JsonProperty("password")
-    private String password;
-
     @JsonProperty("avatar")
     private String avatar;
 
@@ -34,7 +31,6 @@ public class UserResponse {
                 .userId(user.getUserId())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
-                .password(user.getPassword())
                 .avatar(user.getAvatar())
                 .roleName(user.getRole().getRoleName())
                 .build();
