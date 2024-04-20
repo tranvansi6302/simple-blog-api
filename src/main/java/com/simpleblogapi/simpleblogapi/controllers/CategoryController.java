@@ -1,9 +1,9 @@
 package com.simpleblogapi.simpleblogapi.controllers;
 
 import com.simpleblogapi.simpleblogapi.dtos.CategoryDTO;
-import com.simpleblogapi.simpleblogapi.models.Category;
 import com.simpleblogapi.simpleblogapi.responses.CategoryResponse;
 import com.simpleblogapi.simpleblogapi.responses.ListCategoryResponse;
+import com.simpleblogapi.simpleblogapi.responses.PaginationResponse;
 import com.simpleblogapi.simpleblogapi.services.ICategoryService;
 import com.simpleblogapi.simpleblogapi.utils.Validator;
 import jakarta.validation.Valid;

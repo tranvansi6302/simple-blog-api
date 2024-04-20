@@ -32,7 +32,7 @@ public class Post extends BaseEntity{
     @Column(name = "post_status")
     private PostStatus postStatus;
 
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
