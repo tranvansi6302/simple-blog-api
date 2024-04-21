@@ -1,6 +1,7 @@
 package com.simpleblogapi.simpleblogapi.controllers;
 
 import com.simpleblogapi.simpleblogapi.dtos.UserDTO;
+import com.simpleblogapi.simpleblogapi.models.User;
 import com.simpleblogapi.simpleblogapi.responses.ListUserResponse;
 import com.simpleblogapi.simpleblogapi.responses.PaginationResponse;
 import com.simpleblogapi.simpleblogapi.responses.UserResponse;
@@ -59,6 +60,16 @@ public class UserController {
                 return ResponseEntity.badRequest().body(Validator.getMessageValidator(result));
             }
             UserResponse user = userService.updateUser(id, userDTO);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getMe() {
+        try {
+            User user = userService.getMe();
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("message", e.getMessage()));

@@ -11,3 +11,8 @@ mysql:
   database: simple_blog_api
   username: tranvansi
   password: tranvansi
+
+jwt:
+    secret: TV1SxH9C8djoK0TBmVVjTcpgKiPYGBDT5zW81JjFyLM=
+    # 1 day
+    expiration: 86400000

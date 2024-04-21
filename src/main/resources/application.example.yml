@@ -11,3 +11,8 @@ mysql:
   database: simple_blog_api
   username:
   password:
+
+jwt:
+  secret: secret
+  # 1 day
+  expiration: 86400000
