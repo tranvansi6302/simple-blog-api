@@ -8,6 +8,8 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -20,9 +22,9 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JwtTokenUtil {
     @Value("${jwt.expiration}")
-    private Long expiration;
+    private  Long expiration;
     @Value("${jwt.secret}")
-    private String secret;
+    private  String secret;
 
     public String generateToken(User user) {
         // properties => claims
@@ -82,5 +84,12 @@ public class JwtTokenUtil {
     public boolean validateToken(String token, UserDetails userDetails) {
         String email = getEmailFromToken(token);
         return (email.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    public static Long getUserIdFormToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Get id
+        User userDetails = (User) authentication.getPrincipal();
+        return userDetails.getUserId();
     }
 }

@@ -1,5 +1,6 @@
 package com.simpleblogapi.simpleblogapi.responses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Data
@@ -9,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class LoginResponse {
-    private String token;
+    @JsonProperty("access_token")
+    private String accessToken;
     private AuthenticationResponse user;
 }

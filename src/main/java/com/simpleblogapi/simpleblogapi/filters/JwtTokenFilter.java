@@ -32,12 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        final List<Pair<String, String>> publicEndpoints = Arrays.asList(
-                Pair.of("/api/v1/register", "POST"),
-                Pair.of("/api/v1/login", "POST"),
-                Pair.of("/api/v1/posts", "GET"),
-                Pair.of("/api/v1/categories", "GET")
-        );
+
 
         try {
             if (isPublicEndpoint(request)) {
@@ -57,7 +52,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     null,
                                     userDetails.getAuthorities()
                             );
-                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    authenticationToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
@@ -65,7 +61,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
         }
-
     }
 
     private boolean isPublicEndpoint(HttpServletRequest request) {
