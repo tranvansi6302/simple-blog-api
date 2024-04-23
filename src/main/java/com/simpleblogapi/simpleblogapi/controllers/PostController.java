@@ -3,7 +3,7 @@ package com.simpleblogapi.simpleblogapi.controllers;
 import com.simpleblogapi.simpleblogapi.dtos.CreatePostDTO;
 import com.simpleblogapi.simpleblogapi.dtos.UpdatePostDTO;
 import com.simpleblogapi.simpleblogapi.enums.PostStatus;
-import com.simpleblogapi.simpleblogapi.exceptions.DataNotFoundException;
+import com.simpleblogapi.simpleblogapi.exceptions.PermissionDeniedException;
 import com.simpleblogapi.simpleblogapi.responses.*;
 import com.simpleblogapi.simpleblogapi.services.IPostService;
 import com.simpleblogapi.simpleblogapi.utils.Validator;
@@ -66,6 +66,9 @@ public class PostController {
             postService.deletePost(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
+            if (e instanceof PermissionDeniedException) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", e.getMessage()));
+            }
             return ResponseEntity.badRequest().body(Collections.singletonMap("message", e.getMessage()));
         }
     }
@@ -84,6 +87,10 @@ public class PostController {
             PostResponse postResponse = postService.updatePost(id, updatePostDTO);
             return ResponseEntity.ok(postResponse);
         } catch (Exception e) {
+
+            if (e instanceof PermissionDeniedException) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", e.getMessage()));
+            }
             return ResponseEntity.badRequest().body(Collections.singletonMap("message", e.getMessage()));
         }
     }
@@ -111,6 +118,9 @@ public class PostController {
             PostResponse postResponse = postService.uploadImage(id, imageUrl);
             return ResponseEntity.ok(postResponse);
         } catch (Exception e) {
+            if (e instanceof PermissionDeniedException) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", e.getMessage()));
+            }
             return ResponseEntity.badRequest().body(Collections
                     .singletonMap("message", e.getMessage()));
         }

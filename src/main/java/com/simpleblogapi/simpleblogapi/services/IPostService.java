@@ -5,7 +5,6 @@ import com.simpleblogapi.simpleblogapi.dtos.UpdatePostDTO;
 import com.simpleblogapi.simpleblogapi.enums.PostStatus;
 import com.simpleblogapi.simpleblogapi.exceptions.DataNotFoundException;
 import com.simpleblogapi.simpleblogapi.exceptions.PermissionDeniedException;
-import com.simpleblogapi.simpleblogapi.models.User;
 import com.simpleblogapi.simpleblogapi.responses.PostResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

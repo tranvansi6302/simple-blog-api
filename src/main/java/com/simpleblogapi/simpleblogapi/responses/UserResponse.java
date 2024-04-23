@@ -1,7 +1,6 @@
 package com.simpleblogapi.simpleblogapi.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.simpleblogapi.simpleblogapi.models.Role;
 import com.simpleblogapi.simpleblogapi.models.User;
 import lombok.*;
 
