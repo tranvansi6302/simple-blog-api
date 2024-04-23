@@ -2,7 +2,7 @@ package com.simpleblogapi.simpleblogapi.services;
 
 import com.simpleblogapi.simpleblogapi.components.JwtTokenUtil;
 import com.simpleblogapi.simpleblogapi.dtos.ProfileDTO;
-import com.simpleblogapi.simpleblogapi.dtos.UserDTO;
+import com.simpleblogapi.simpleblogapi.dtos.UpdateUserDTO;
 import com.simpleblogapi.simpleblogapi.exceptions.DataNotFoundException;
 import com.simpleblogapi.simpleblogapi.models.Role;
 import com.simpleblogapi.simpleblogapi.models.User;
@@ -21,44 +21,44 @@ import org.springframework.stereotype.Service;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
     @Override
     public Page<UserResponse> findAll(PageRequest pageRequest) {
-      return userRepository.findAll(pageRequest).map(UserResponse::fromUser);
+        return userRepository.findAll(pageRequest).map(UserResponse::fromUser);
     }
 
     @Override
     public void deleteUser(Long id) throws DataNotFoundException {
-       User user = userRepository.findById(id).orElseThrow(
+        User user = userRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("User not found with id: " + id)
         );
         userRepository.delete(user);
     }
 
     @Override
-    public UserResponse updateUser(Long id, UserDTO userDTO) throws DataNotFoundException {
+    public UserResponse updateUser(Long id, UpdateUserDTO updateUserDTO) throws DataNotFoundException {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("User not found with id: " + id)
         );
-        Role role = roleRepository.findById(userDTO.getRoleId()).orElseThrow(
-                () -> new DataNotFoundException("Role not found with id: " + userDTO.getRoleId())
+        Role role = roleRepository.findById(updateUserDTO.getRoleId()).orElseThrow(
+                () -> new DataNotFoundException("Role not found with id: " + updateUserDTO.getRoleId())
         );
-        if(userRepository.existsByEmail(userDTO.getEmail()) && !user.getEmail().equals(userDTO.getEmail())) {
+        if (userRepository.existsByEmail(updateUserDTO.getEmail()) && !user.getEmail().equals(updateUserDTO.getEmail())) {
             throw new DataNotFoundException("Email already exists");
         }
 
-        user.setFullName(userDTO.getFullName());
-        user.setEmail(userDTO.getEmail());
+        BeanUtils.copyProperties(updateUserDTO, user, CheckCondition.getNullPropertyNames(updateUserDTO));
         user.setRole(role);
         return UserResponse.fromUser(userRepository.save(user));
     }
 
     @Override
     public UserResponse getMe() throws DataNotFoundException {
-      Long userId = JwtTokenUtil.getUserIdFormToken();
+        Long userId = JwtTokenUtil.getUserIdFormToken();
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new DataNotFoundException("User not found with id: " + userId)
         );
-       return UserResponse.fromUser(user);
+        return UserResponse.fromUser(user);
 
     }
 
@@ -68,7 +68,7 @@ public class UserService implements IUserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new DataNotFoundException("User not found with id: " + userId)
         );
-        if(userRepository.existsByEmail(profileDTO.getEmail()) && !user.getEmail().equals(profileDTO.getEmail())) {
+        if (userRepository.existsByEmail(profileDTO.getEmail()) && !user.getEmail().equals(profileDTO.getEmail())) {
             throw new DataNotFoundException("Email already exists");
         }
         BeanUtils.copyProperties(profileDTO, user, CheckCondition.getNullPropertyNames(profileDTO));

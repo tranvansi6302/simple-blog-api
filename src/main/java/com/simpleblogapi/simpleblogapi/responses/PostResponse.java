@@ -2,13 +2,8 @@ package com.simpleblogapi.simpleblogapi.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.simpleblogapi.simpleblogapi.enums.PostStatus;
-import com.simpleblogapi.simpleblogapi.models.Category;
 import com.simpleblogapi.simpleblogapi.models.Post;
-import com.simpleblogapi.simpleblogapi.models.User;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter

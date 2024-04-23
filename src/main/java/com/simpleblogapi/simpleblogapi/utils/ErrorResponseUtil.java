@@ -2,7 +2,6 @@ package com.simpleblogapi.simpleblogapi.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleblogapi.simpleblogapi.responses.ErrorResponse;
-import org.springframework.http.HttpStatus;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 

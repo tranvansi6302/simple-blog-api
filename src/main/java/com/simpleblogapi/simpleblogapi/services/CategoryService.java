@@ -1,15 +1,15 @@
 package com.simpleblogapi.simpleblogapi.services;
 
 import com.simpleblogapi.simpleblogapi.dtos.CategoryDTO;
+import com.simpleblogapi.simpleblogapi.dtos.UpdateCategoryDTO;
 import com.simpleblogapi.simpleblogapi.exceptions.DataNotFoundException;
 import com.simpleblogapi.simpleblogapi.exceptions.ExistedDataException;
 import com.simpleblogapi.simpleblogapi.models.Category;
 import com.simpleblogapi.simpleblogapi.repositories.CategoryRepository;
 import com.simpleblogapi.simpleblogapi.responses.CategoryResponse;
-import com.simpleblogapi.simpleblogapi.responses.ListCategoryResponse;
+import com.simpleblogapi.simpleblogapi.utils.CheckCondition;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,13 +55,13 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public CategoryResponse updateCategory(Long id, CategoryDTO categoryDTO) throws DataNotFoundException, ExistedDataException {
+    public CategoryResponse updateCategory(Long id, UpdateCategoryDTO updateCategoryDTO) throws DataNotFoundException, ExistedDataException {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Category not found"));
-        if(categoryRepository.existsByCategoryName(categoryDTO.getCategoryName())) {
+        if(categoryRepository.existsByCategoryName(updateCategoryDTO.getCategoryName())) {
             throw new ExistedDataException("Category already exists");
         }
-        category.setCategoryName(categoryDTO.getCategoryName());
+        BeanUtils.copyProperties(updateCategoryDTO, category, CheckCondition.getNullPropertyNames(updateCategoryDTO));
         return CategoryResponse.fromCategory(categoryRepository.save(category));
     }
 }

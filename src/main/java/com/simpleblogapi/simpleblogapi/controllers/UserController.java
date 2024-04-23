@@ -1,11 +1,9 @@
 package com.simpleblogapi.simpleblogapi.controllers;
 
 import com.simpleblogapi.simpleblogapi.dtos.ProfileDTO;
-import com.simpleblogapi.simpleblogapi.dtos.UserDTO;
-import com.simpleblogapi.simpleblogapi.models.User;
+import com.simpleblogapi.simpleblogapi.dtos.UpdateUserDTO;
 import com.simpleblogapi.simpleblogapi.responses.ListUserResponse;
 import com.simpleblogapi.simpleblogapi.responses.PaginationResponse;
-import com.simpleblogapi.simpleblogapi.responses.PostResponse;
 import com.simpleblogapi.simpleblogapi.responses.UserResponse;
 import com.simpleblogapi.simpleblogapi.services.IUserService;
 import com.simpleblogapi.simpleblogapi.utils.Validator;
@@ -17,8 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -66,14 +62,14 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateUser(
             @PathVariable Long id,
-            @Valid @RequestBody UserDTO userDTO,
+            @Valid @RequestBody UpdateUserDTO updateUserDTO,
             BindingResult result
     ) {
         try {
             if(result.hasErrors()) {
                 return ResponseEntity.badRequest().body(Validator.getMessageValidator(result));
             }
-            UserResponse user = userService.updateUser(id, userDTO);
+            UserResponse user = userService.updateUser(id, updateUserDTO);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("message", e.getMessage()));

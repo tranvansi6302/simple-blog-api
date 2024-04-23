@@ -5,7 +5,6 @@ import com.simpleblogapi.simpleblogapi.dtos.RegisterDTO;
 import com.simpleblogapi.simpleblogapi.responses.AuthenticationResponse;
 import com.simpleblogapi.simpleblogapi.responses.LoginResponse;
 import com.simpleblogapi.simpleblogapi.services.IAuthenticationService;
-import com.simpleblogapi.simpleblogapi.services.IUserService;
 import com.simpleblogapi.simpleblogapi.utils.Validator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.naming.Binding;
 import java.util.Collections;
 
 @RestController
