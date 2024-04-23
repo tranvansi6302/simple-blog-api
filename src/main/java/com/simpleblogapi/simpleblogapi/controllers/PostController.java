@@ -1,6 +1,9 @@
 package com.simpleblogapi.simpleblogapi.controllers;
 
-import com.simpleblogapi.simpleblogapi.dtos.PostDTO;
+import com.simpleblogapi.simpleblogapi.dtos.CreatePostDTO;
+import com.simpleblogapi.simpleblogapi.dtos.UpdatePostDTO;
+import com.simpleblogapi.simpleblogapi.enums.PostStatus;
+import com.simpleblogapi.simpleblogapi.exceptions.DataNotFoundException;
 import com.simpleblogapi.simpleblogapi.responses.*;
 import com.simpleblogapi.simpleblogapi.services.IPostService;
 import com.simpleblogapi.simpleblogapi.utils.Validator;
@@ -36,14 +39,25 @@ public class PostController {
     @GetMapping("")
     public ResponseEntity<?> getAllPosts(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "limit", defaultValue = "10") int limit
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(value = "status", required = false) PostStatus postStatus
     ) {
         PageRequest pageRequest = PageRequest.of(page - 1, limit, Sort.by("createdAt").descending());
-        Page<PostResponse> postPage = postService.findAll(pageRequest);
+        Page<PostResponse> postPage = postService.findAll(postStatus, pageRequest);
         List<PostResponse> posts = postPage.getContent();
         PaginationResponse pagination = new PaginationResponse(page, limit, postPage.getTotalPages());
         ListPostResponse listPostResponse = new ListPostResponse(posts, pagination);
         return ResponseEntity.ok(listPostResponse);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPostById(@PathVariable Long id) {
+        try {
+            PostResponse postResponse = postService.getPostById(id);
+            return ResponseEntity.ok(postResponse);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", e.getMessage()));
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -59,7 +73,7 @@ public class PostController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePost(
             @PathVariable Long id,
-            @Valid @RequestBody PostDTO postDTO,
+            @Valid @RequestBody UpdatePostDTO updatePostDTO,
             BindingResult result
     ) {
 
@@ -67,7 +81,7 @@ public class PostController {
             if (result.hasErrors()) {
                 return ResponseEntity.badRequest().body(Validator.getMessageValidator(result));
             }
-            PostResponse postResponse = postService.updatePost(id, postDTO);
+            PostResponse postResponse = postService.updatePost(id, updatePostDTO);
             return ResponseEntity.ok(postResponse);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("message", e.getMessage()));
@@ -122,5 +136,19 @@ public class PostController {
         String contentType = file.getContentType();
         return contentType != null && contentType.startsWith("image/");
     }
-
+    @PostMapping("")
+    public ResponseEntity<?> createPost(
+            @Valid @RequestBody CreatePostDTO createPostDTO,
+            BindingResult result
+    ) {
+        try {
+            if (result.hasErrors()) {
+                return ResponseEntity.badRequest().body(Validator.getMessageValidator(result));
+            }
+            PostResponse postResponse = postService.createPost(createPostDTO);
+            return ResponseEntity.ok(postResponse);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", e.getMessage()));
+        }
+    }
 }

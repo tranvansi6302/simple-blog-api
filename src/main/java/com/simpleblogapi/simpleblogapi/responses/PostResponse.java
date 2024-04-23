@@ -49,5 +49,4 @@ public class PostResponse {
                 .category(CategoryResponse.fromCategory(post.getCategory()))
                 .build();
     }
-
 }

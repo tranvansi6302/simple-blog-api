@@ -9,9 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaginationResponse {
-    private int page;
-    private int limit;
-    @JsonProperty("total_page")
-    private int totalPage;
+public class LoginResponse {
+    @JsonProperty("access_token")
+    private String accessToken;
+    private AuthenticationResponse user;
 }

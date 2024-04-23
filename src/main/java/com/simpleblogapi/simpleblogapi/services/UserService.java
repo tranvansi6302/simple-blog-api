@@ -1,5 +1,7 @@
 package com.simpleblogapi.simpleblogapi.services;
 
+import com.simpleblogapi.simpleblogapi.components.JwtTokenUtil;
+import com.simpleblogapi.simpleblogapi.dtos.ProfileDTO;
 import com.simpleblogapi.simpleblogapi.dtos.UserDTO;
 import com.simpleblogapi.simpleblogapi.exceptions.DataNotFoundException;
 import com.simpleblogapi.simpleblogapi.models.Role;
@@ -7,11 +9,12 @@ import com.simpleblogapi.simpleblogapi.models.User;
 import com.simpleblogapi.simpleblogapi.repositories.RoleRepository;
 import com.simpleblogapi.simpleblogapi.repositories.UserRepository;
 import com.simpleblogapi.simpleblogapi.responses.UserResponse;
+import com.simpleblogapi.simpleblogapi.utils.CheckCondition;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 
 @Service
 @RequiredArgsConstructor
@@ -48,4 +51,38 @@ public class UserService implements IUserService {
         user.setRole(role);
         return UserResponse.fromUser(userRepository.save(user));
     }
+
+    @Override
+    public UserResponse getMe() throws DataNotFoundException {
+      Long userId = JwtTokenUtil.getUserIdFormToken();
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new DataNotFoundException("User not found with id: " + userId)
+        );
+       return UserResponse.fromUser(user);
+
+    }
+
+    @Override
+    public UserResponse updateMe(ProfileDTO profileDTO) throws DataNotFoundException {
+        Long userId = JwtTokenUtil.getUserIdFormToken();
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new DataNotFoundException("User not found with id: " + userId)
+        );
+        if(userRepository.existsByEmail(profileDTO.getEmail()) && !user.getEmail().equals(profileDTO.getEmail())) {
+            throw new DataNotFoundException("Email already exists");
+        }
+        BeanUtils.copyProperties(profileDTO, user, CheckCondition.getNullPropertyNames(profileDTO));
+        return UserResponse.fromUser(userRepository.save(user));
+    }
+
+    @Override
+    public UserResponse uploadAvatar(String imageUrl) throws DataNotFoundException {
+        Long userId = JwtTokenUtil.getUserIdFormToken();
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new DataNotFoundException("User not found with id: " + userId)
+        );
+        user.setAvatar(imageUrl);
+        return UserResponse.fromUser(userRepository.save(user));
+    }
+
 }
