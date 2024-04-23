@@ -18,4 +18,7 @@ public class Role extends BaseEntity{
 
     @Column(name = "role_name",length = 100, nullable = false)
     private String roleName;
+
+    public static String ADMIN = "ADMIN";
+    public static String USER = "USER";
 }
